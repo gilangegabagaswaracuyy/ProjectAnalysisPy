@@ -9,7 +9,7 @@ from sklearn.cluster import KMeans
 st.title("Dashboard Analisis Data E-Commerce")
 
 # Memuat dataset
-@st.cache_data
+@st.cache
 
 def load_data():
     
