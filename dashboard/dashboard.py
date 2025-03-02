@@ -10,7 +10,7 @@ import os
 st.title("Dashboard Analisis Data E-Commerce")
 
 # Memuat dataset dengan caching
-@st.cache_data
+@st.cache_resource
 def load_data():
     day_file = '../data/day.csv'
     hour_file = '../data/hour.csv'
