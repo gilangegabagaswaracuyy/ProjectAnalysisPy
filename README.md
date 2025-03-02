@@ -26,11 +26,11 @@ pip install -r requirements.txt
 - Paket / Library yang digunakan dalam proyek.
 
 ### Daftar Paket
-- `pandas==1.5.3`
-- `numpy==1.23.5`
+- `pandas==1.4.2`
+- `numpy==1.24.2`
 - `matplotlib==3.7.0`
-- `seaborn==0.12.2`
-- `scikit-learn==1.2.2`
+- `seaborn==0.11.2`
+- `scikit-learn==1.1.0`
 - `plotly==5.11.0`
 - `streamlit==1.16.0`
 - `altair==4.1.0`

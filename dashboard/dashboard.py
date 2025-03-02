@@ -4,17 +4,46 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.impute import SimpleImputer
 from sklearn.cluster import KMeans
+import os
 
 # Judul Dashboard
 st.title("Dashboard Analisis Data E-Commerce")
 
-# Memuat dataset dengan caching baru
-@st.cache  # Use st.cache for caching data loading functions
+# Memuat dataset dengan caching
+@st.cache_data
 def load_data():
-    df_day = pd.read_csv('../data/day.csv')
-    df_hour = pd.read_csv('../data/hour.csv')
+    day_file = '../data/day.csv'
+    hour_file = '../data/hour.csv'
+    
+    # Cek apakah file ada
+    if not os.path.exists(day_file):
+        st.error(f"File tidak ditemukan: {day_file}")
+        return None, None  # Mengembalikan None jika file tidak ditemukan
+    
+    if not os.path.exists(hour_file):
+        st.error(f"File tidak ditemukan: {hour_file}")
+        return None, None  # Mengembalikan None jika file tidak ditemukan
+    
+    try:
+        df_day = pd.read_csv(day_file)
+        df_hour = pd.read_csv(hour_file)
+    except pd.errors.EmptyDataError:
+        st.error("File CSV kosong.")
+        return None, None
+    except pd.errors.ParserError:
+        st.error("Kesalahan saat parsing file CSV.")
+        return None, None
+    except Exception as e:
+        st.error(f"Terjadi kesalahan saat memuat data: {e}")
+        return None, None
+    
     return df_day, df_hour
+
 df_day, df_hour = load_data()
+
+# Jika data tidak berhasil dimuat, hentikan eksekusi lebih lanjut
+if df_day is None or df_hour is None:
+    st.stop()
 
 # Menampilkan data
 if st.checkbox("Tampilkan Data Hari"):
@@ -29,23 +58,29 @@ if st.checkbox("Tampilkan Data Jam"):
 st.subheader("Analisis RFM")
 
 # Menghitung RFM
-df_day['date'] = pd.to_datetime(df_day['dteday'])  # Mengkonversi kolom 'dteday' menjadi format datetime
-rfm = df_day.groupby('instant').agg({
-    'date': 'max',
-    'cnt': 'sum'
-}).reset_index()  # Menghitung total penyewaan per 'instant'
+try:
+    df_day['date'] = pd.to_datetime(df_day['dteday'])  # Mengkonversi kolom 'dteday' menjadi format datetime
+    rfm = df_day.groupby('instant').agg({
+        'date': 'max',
+        'cnt': 'sum'
+    }).reset_index()  # Menghitung total penyewaan per 'instant'
 
-# Menghitung Recency
-rfm['Recency'] = (df_day['date'].max() - rfm['date']).dt.days  # Menghitung jumlah hari sejak pembelian terakhir
-rfm.rename(columns={'date': 'LastPurchase', 'cnt': 'Monetary'}, inplace=True)  # Mengganti nama kolom
-rfm['Frequency'] = df_day.groupby('instant')['cnt'].count().values  # Menghitung frekuensi penyewaan
+    # Menghitung Recency
+    rfm['Recency'] = (df_day['date'].max() - rfm['date']).dt.days  # Menghitung jumlah hari sejak pembelian terakhir
+    rfm.rename(columns={'date': 'LastPurchase', 'cnt': 'Monetary'}, inplace=True)  # Mengganti nama kolom
+    rfm['Frequency'] = df_day.groupby('instant')['cnt'].count().values  # Menghitung frekuensi penyewaan
+except Exception as e:
+    st.error(f"Terjadi kesalahan saat menghitung RFM: {e}")
 
 # KMeans Clustering
-imp = SimpleImputer(strategy='mean')  # Menggunakan imputasi rata-rata untuk menangani nilai yang hilang
-X_imputed = imp.fit_transform(rfm[['Recency', 'Frequency', 'Monetary']])  # Mengisi nilai yang hilang
-kmeans = KMeans(n_clusters=4, n_init=10, random_state=0)  # Menginisialisasi KMeans dengan 4 kluster
-clusters = kmeans.fit_predict(X_imputed)  # Menerapkan KMeans pada data
-rfm['Cluster'] = clusters  # Menambahkan hasil kluster ke DataFrame RFM
+try:
+    imp = SimpleImputer(strategy='mean')  # Menggunakan imputasi rata-rata untuk menangani nilai yang hilang
+    X_imputed = imp.fit_transform(rfm[['Recency', 'Frequency', 'Monetary']])  # Mengisi nilai yang hilang
+    kmeans = KMeans(n_clusters=4, n_init=10, random_state=0)  # Menginisialisasi KMeans dengan 4 kluster
+    clusters = kmeans.fit_predict(X_imputed)  # Menerapkan KMeans pada data
+    rfm['Cluster'] = clusters  # Menambahkan hasil kluster ke DataFrame RFM
+except Exception as e:
+    st.error(f"Terjadi kesalahan saat melakukan clustering: {e}")
 
 # Menampilkan hasil clustering
 st.write(rfm.head())  # Menampilkan 5 baris pertama dari DataFrame RFM yang sudah berisi kluster
