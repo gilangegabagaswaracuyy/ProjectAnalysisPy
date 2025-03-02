@@ -34,6 +34,7 @@ pip install -r requirements.txt
 - `plotly==5.11.0`
 - `streamlit==1.16.0`
 
+
 ## Analisis Data
 Analisis dilakukan melalui beberapa tahap, sebagai berikut:
 
