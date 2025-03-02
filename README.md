@@ -53,7 +53,6 @@ Visualisasi dilakukan dengan menggunakan `matplotlib` dan `seaborn` untuk mengga
 Untuk menjalankan dashboard visualisasi, gunakan perintah berikut:
 
 ```bash
-cd dashboard
 streamlit run dashboard.py
 
 ## Penutup
