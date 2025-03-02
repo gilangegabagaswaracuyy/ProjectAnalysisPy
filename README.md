@@ -33,6 +33,7 @@ pip install -r requirements.txt
 - `scikit-learn==1.2.2`
 - `plotly==5.11.0`
 - `streamlit==1.16.0`
+- `altair==4.1.0`
 
 
 ## Analisis Data
