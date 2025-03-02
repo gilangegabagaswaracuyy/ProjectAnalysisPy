@@ -12,8 +12,8 @@ st.title("Dashboard Analisis Data E-Commerce")
 # Memuat dataset dengan caching
 @st.cache_resource
 def load_data():
-    day_file = pd.read_csv("data/day.csv")
-    hour_file = pd.read_csv("data/hour.csv")
+    day_file = pd.read_csv("../data/day.csv")
+    hour_file = pd.read_csv("../data/hour.csv")
     
     # Cek apakah file ada
     if not os.path.exists(day_file):
