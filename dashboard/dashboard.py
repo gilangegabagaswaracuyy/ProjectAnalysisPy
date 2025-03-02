@@ -9,12 +9,11 @@ from sklearn.cluster import KMeans
 st.title("Dashboard Analisis Data E-Commerce")
 
 # Memuat dataset dengan caching baru
-@st.cache_data  # Use st.cache_data for caching data loading functions
+@st.cache  # Use st.cache for caching data loading functions
 def load_data():
     df_day = pd.read_csv('../data/day.csv')
     df_hour = pd.read_csv('../data/hour.csv')
     return df_day, df_hour
-
 df_day, df_hour = load_data()
 
 # Menampilkan data
