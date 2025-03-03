@@ -49,7 +49,7 @@ Analisis dilakukan melalui beberapa tahap, sebagai berikut:
 ## Visualisasi
 Visualisasi dilakukan dengan menggunakan `matplotlib` dan `seaborn` untuk menggambarkan hubungan antara variabel, seperti suhu dan jumlah penyewaan.
 
-## Menjalankan Dashboard
+## Menjalankan Dashboard Streamlit App
 Untuk menjalankan dashboard visualisasi, gunakan perintah berikut:
 
 ```bash
